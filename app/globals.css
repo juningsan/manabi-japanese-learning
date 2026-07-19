@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-ink: #17231d;
+  --color-muted: #748078;
+  --color-paper: #f6f5f0;
+  --color-line: #e1e2db;
+  --color-brand: #214c3a;
+  --color-accent: #d7694a;
+  --font-sans: "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
+  --font-display: Georgia, "Yu Mincho", serif;
+}
+
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--color-paper); color: var(--color-ink); font-family: var(--font-sans); }
