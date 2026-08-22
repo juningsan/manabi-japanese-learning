@@ -1,0 +1,32 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+
+  "name": "manabi-japanese-learning",
+  "account_id": "dd2d4df0bfc96cee8988148925a880e3",
+
+  "main": "./worker/index.ts",
+  "compatibility_date": "2026-05-22",
+  "compatibility_flags": ["nodejs_compat"],
+
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist/client"
+  },
+
+  "images": {
+    "binding": "IMAGES"
+  },
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "manabi-production",
+      "database_id": "adb950bb-3bbd-44cc-8f54-db0ea72f2ba9",
+      "migrations_dir": "./drizzle"
+    }
+  ],
+
+  "observability": {
+    "enabled": true
+  }
+}
