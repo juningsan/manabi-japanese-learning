@@ -112,4 +112,6 @@ npm run db:generate  # 生成数据库迁移
 4. 调整相关页面与接口逻辑，为后续实现「输入语法 → AI 自动生成含义、接续、用法等字段」做准备。
 5. 本地实现 POST 接口，包括请求和响应数据的校验。编写 Prompt，要求返回符合类型要求的 JSON 数据。
 6. 修改 `generateGrammarSuggestion` 函数，增加对返回结果的校验。
-7. `grammar-form` 页面 UI 初步调整。
+7. `grammar-form` 页面 UI 调整。
+8. 增加GEMINI rate limit，单个ip每分钟最多请求5次。
+9. 部署至Cloudflare。
