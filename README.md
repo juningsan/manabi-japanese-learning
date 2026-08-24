@@ -34,31 +34,74 @@ npm run db:generate  # 生成数据库迁移
 
 项目规划见 `docs/`。数据库采用 Drizzle + SQLite/D1，V1 数据模型包含 User、Grammar、Word、Note、Favorite 和 Review。
 
-## 开发进度
+# 开发日志
 
-- 8月22日 cloudflare上线
+## 8月22日：Cloudflare 上线
 
-https://manabi-japanese-learning.skyforestlin.workers.dev/
+线上地址：[Manabi Japanese Learning](https://manabi-japanese-learning.skyforestlin.workers.dev/)
 
-1.登陆cloudflare账号 npx wrangler login 获取Accound ID
-2.创建生产D1数据库 npx wrangler d1 create manabi-production 获取database_id
-3.根目录下创建wrangler.jsonc文件，填入Account ID和database_id
-4.修改vite.config.ts，与wrangler.jsonc绑定
-5.迁移应用到生产D1
-  npx wrangler d1 migrations list manabi-production --remote        #检查迁移项目
-  npx wrangler d1 migrations apply manabi-production --remote       #执行项目迁移       
-6.在pakage.json中新增部署脚本
-7.生成Cloudflare类型
-  npm run cf:typegen        #根目录下生成worker-configuration.d.ts文件
-8.本地模拟生产环境 npm run preview
-9.第一次部署
-  npm run lint
-  npm test
-  npm run deploy
-10.测试
+1. 登录 Cloudflare：
 
-- 8月23日 需求分析，研究AI api接入相关技术
+   ```bash
+   npx wrangler login
+   ```
 
-准备在新增语法页面，添加AI补全内容功能。用户输入语法关键词后，AI自动补齐相关字段。
+   获取 Account ID。
 
-- 8月24日 开始AI接入实装
+2. 创建生产环境 D1 数据库：
+
+   ```bash
+   npx wrangler d1 create manabi-production
+   ```
+
+   获取 `database_id`。
+
+3. 在项目根目录创建 `wrangler.jsonc`，填入 Account ID 和 `database_id`。
+
+4. 修改 `vite.config.ts`，与 `wrangler.jsonc` 绑定。
+
+5. 将数据库迁移到生产环境：
+
+   ```bash
+   # 检查待迁移项目
+   npx wrangler d1 migrations list manabi-production --remote
+
+   # 执行迁移
+   npx wrangler d1 migrations apply manabi-production --remote
+   ```
+
+6. 在 `package.json` 中添加部署脚本。
+
+7. 生成 Cloudflare 类型定义：
+
+   ```bash
+   npm run cf
+   ```
+
+   在项目根目录生成 `worker-configuration.d.ts`。
+
+8. 本地模拟生产环境：
+
+   ```bash
+   npm run preview
+   ```
+
+9. 首次部署：
+
+   ```bash
+   npm run lint
+   npm test
+   npm run deploy
+   ```
+
+10. 测试线上应用。
+
+## 8月23日：AI 功能需求分析
+
+- 调研 AI API 接入方案。
+- 计划在“新增语法”页面添加 AI 内容补全功能。
+- 用户输入语法关键词后，由 AI 自动补全相关字段。
+
+## 8月24日：AI 接入开发
+
+- 开始实现 AI 接入与自动补全功能。
