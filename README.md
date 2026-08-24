@@ -110,3 +110,6 @@ npm run db:generate  # 生成数据库迁移
 2. 新增 `/api/grammar/new` API Route，用于处理语法信息自动补全请求。
 3. 在根目录新增 `utils` 目录，并创建 `Gemini.ts`，封装 Gemini API 调用逻辑。
 4. 调整相关页面与接口逻辑，为后续实现「输入语法 → AI 自动生成含义、接续、用法等字段」做准备。
+5. 本地实现 POST 接口，包括请求和响应数据的校验。编写 Prompt，要求返回符合类型要求的 JSON 数据。
+6. 修改 `generateGrammarSuggestion` 函数，增加对返回结果的校验。
+7. `grammar-form` 页面 UI 初步调整。
