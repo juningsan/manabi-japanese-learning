@@ -1,4 +1,4 @@
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, ApiError } from "@google/genai";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { env } from "cloudflare:workers";
@@ -92,9 +92,22 @@ export async function POST(request: Request) {
     return NextResponse.json({ suggestion });
   } catch (error) {
     console.error("Gemini生成出错:", error);
+    if (error instanceof ApiError && error.status === 429) {
+      return NextResponse.json(
+        {
+          error: "AI 请求额度暂时用完，请稍后再试；你仍然可以手动填写内容",
+        },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": "60",
+          },
+        },
+      );
+    }//增加对额度用完的处理
 
     return NextResponse.json(
-      { error: "AI 生成失败，请稍后重试" },
+      { error: "AI 服务暂时不可用，请稍后重试" },
       { status: 502 },
     );
   }
