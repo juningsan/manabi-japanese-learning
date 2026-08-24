@@ -1,6 +1,6 @@
 "use client";
 
-import { useState,useEffect, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import type { GrammarInput } from "../schemas/grammar-schema";
 import { jlptLevels } from "../schemas/grammar-schema";
@@ -16,6 +16,12 @@ export function GrammarForm({ initial, grammarId }: Props) {
   const router = useRouter();
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [title, setTitle] = useState(initial?.title || "");
+  const [meaning, setMeaning] = useState(initial?.meaning || "");
+  const [structure, setStructure] = useState(initial?.structure || "");
+  const [jlptLevel, setJlptLevel] = useState(initial?.jlptLevel || "N2");
+  const [explanation, setExplanation] = useState(initial?.explanation || "");
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -43,13 +49,13 @@ export function GrammarForm({ initial, grammarId }: Props) {
     router.refresh();
   }
 
-  useEffect(() => {
-    const testGemini = async () => {
-      const suggestion = await generateGrammarSuggestion();
-      console.log(suggestion);
-    };
-    testGemini();
-  }, []);
+  // useEffect(() => {
+  //   const testGemini = async () => {
+  //     const suggestion = await generateGrammarSuggestion();
+  //     console.log(suggestion);
+  //   };
+  //   testGemini();
+  // }, []);
 
   return (
     <form
@@ -64,17 +70,43 @@ export function GrammarForm({ initial, grammarId }: Props) {
           {error}
         </div>
       )}
-      <label className={label}>
-        <span>语法名称 *</span>
-        <input
-          className={field}
-          name="title"
-          required
-          maxLength={80}
-          defaultValue={initial?.title}
-          placeholder="例：〜だけに"
-        />
-      </label>
+      <div className="grid items-end gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
+        <label className={label}>
+          <span>语法名称 *</span>
+          <input
+            className={field}
+            name="title"
+            required
+            maxLength={80}
+            value={title}
+            placeholder="例：〜だけに"
+            onChange={(event) => setTitle(event.target.value)}
+          />
+        </label>
+        <button
+          type="button"
+          className="inline-flex min-h-[42px] w-full cursor-pointer items-center justify-center whitespace-nowrap rounded-lg border border-line bg-white px-[17px] py-[11px] text-xs font-extrabold text-ink transition hover:border-brand hover:text-brand sm:w-auto"
+          disabled={generating || !title.trim()}
+          onClick={async () => {
+            setError("");
+            setGenerating(true);
+
+            try {
+              const suggestion = await generateGrammarSuggestion(title);
+              setMeaning(suggestion.meaning);
+              setStructure(suggestion.structure);
+              setJlptLevel(suggestion.jlptLevel);
+              setExplanation(suggestion.explanation);
+            } catch (error) {
+              setError(error instanceof Error ? error.message : "AI 生成失败");
+            } finally {
+              setGenerating(false);
+            }
+          }}
+        >
+          生成建议
+        </button>
+      </div>
       <label className={label}>
         <span>中文含义 *</span>
         <textarea
@@ -83,7 +115,8 @@ export function GrammarForm({ initial, grammarId }: Props) {
           required
           maxLength={300}
           rows={3}
-          defaultValue={initial?.meaning}
+          value={meaning}
+          onChange={(event) => setMeaning(event.target.value)}
           placeholder="例：正因为……；不愧是……"
         />
       </label>
@@ -93,7 +126,8 @@ export function GrammarForm({ initial, grammarId }: Props) {
           <select
             className={field}
             name="jlptLevel"
-            defaultValue={initial?.jlptLevel || "N2"}
+            value={jlptLevel}
+            onChange={(event) => setJlptLevel(event.target.value as typeof jlptLevel)}
           >
             {jlptLevels.map((level) => (
               <option key={level}>{level}</option>
@@ -106,7 +140,8 @@ export function GrammarForm({ initial, grammarId }: Props) {
             className={field}
             name="structure"
             maxLength={500}
-            defaultValue={initial?.structure}
+            value={structure}
+            onChange={(event) => setStructure(event.target.value)}
             placeholder="普通形＋だけに"
           />
         </label>
@@ -118,7 +153,8 @@ export function GrammarForm({ initial, grammarId }: Props) {
           name="explanation"
           maxLength={5000}
           rows={8}
-          defaultValue={initial?.explanation}
+          value={explanation}
+          onChange={(event) => setExplanation(event.target.value)}
           placeholder="填写使用场景、语感、注意点和常见错误……"
         />
       </label>
