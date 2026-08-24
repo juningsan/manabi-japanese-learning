@@ -104,4 +104,9 @@ npm run db:generate  # 生成数据库迁移
 
 ## 8月24日：AI 接入开发
 
-- 开始实现 AI 接入与自动补全功能。
+- 开始实现 AI 接入与语法信息自动补全功能。
+
+1. 获取 Gemini API Key，并在 `.env.local` 中配置环境变量。
+2. 新增 `/api/grammar/new` API Route，用于处理语法信息自动补全请求。
+3. 在根目录新增 `utils` 目录，并创建 `Gemini.ts`，封装 Gemini API 调用逻辑。
+4. 调整相关页面与接口逻辑，为后续实现「输入语法 → AI 自动生成含义、接续、用法等字段」做准备。
