@@ -30,7 +30,7 @@ export default async function GrammarPage({ searchParams }: Props) {
             ホーム
           </Link>
           <Link
-            className="border-b-2 border-brand py-[31px] text-brand no-underline"
+            className="border-b-2 border-brand text-brand no-underline"
             href="/grammar"
           >
             文法

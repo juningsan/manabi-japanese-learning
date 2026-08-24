@@ -1,6 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { env } from "cloudflare:workers";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
@@ -13,10 +14,16 @@ const requestSchema = z.object({
 });
 
 export async function POST(request: Request) {
-  const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+  if (!GEMINI_API_KEY) {
+    return NextResponse.json(
+      { error: "Gemini API Key 未配置" },
+      { status: 500 },
+    );
+  }
+
   const parsed = requestSchema.safeParse(
     await request.json().catch(() => null),
-  );//请求数据必须符合schema。否则parsed.success返回false
+  ); //请求数据必须符合schema。否则parsed.success返回false
   const prompt = `
     你是一名专业的日语教师，面向中文母语的日语学习者。
 
@@ -45,12 +52,26 @@ export async function POST(request: Request) {
     );
   }
 
-  if (!GEMINI_API_KEY) {
+  const clientIp =
+    request.headers.get("cf-connecting-ip") ?? "local-development";
+
+  const { success } = await env.GEMINI_RATE_LIMITER.limit({
+    key: `gemini:${clientIp}`,
+  });
+
+  if (!success) {
     return NextResponse.json(
-      { error: "Gemini API Key 未配置" },
-      { status: 500 },
+      { error: "请求过于频繁，请一分钟后再试" },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": "60",
+        },
+      },
     );
   }
+
+  const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
   try {
     const response = await ai.models.generateContent({

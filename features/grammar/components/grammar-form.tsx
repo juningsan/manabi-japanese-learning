@@ -45,17 +45,8 @@ export function GrammarForm({ initial, grammarId }: Props) {
       setError(result.error || "保存失败，请稍后重试");
       return;
     }
-    router.push(`/grammar/${result.data.id}`);
-    router.refresh();
+    window.location.assign("/grammar");
   }
-
-  // useEffect(() => {
-  //   const testGemini = async () => {
-  //     const suggestion = await generateGrammarSuggestion();
-  //     console.log(suggestion);
-  //   };
-  //   testGemini();
-  // }, []);
 
   return (
     <form
@@ -85,7 +76,7 @@ export function GrammarForm({ initial, grammarId }: Props) {
         </label>
         <button
           type="button"
-          className="inline-flex min-h-[42px] w-full cursor-pointer items-center justify-center whitespace-nowrap rounded-lg border border-line bg-white px-[17px] py-[11px] text-xs font-extrabold text-ink transition hover:border-brand hover:text-brand sm:w-auto"
+          className="inline-flex min-h-[42px] w-full cursor-pointer items-center justify-center whitespace-nowrap rounded-lg border border-line bg-white px-[17px] py-[11px] text-xs font-extrabold text-ink transition hover:border-brand hover:text-brand disabled:cursor-not-allowed disabled:border-[#d9dfda] disabled:bg-[#eef1ee] disabled:text-[#98a19a] disabled:opacity-100 sm:w-auto"
           disabled={generating || !title.trim()}
           onClick={async () => {
             setError("");
@@ -104,7 +95,7 @@ export function GrammarForm({ initial, grammarId }: Props) {
             }
           }}
         >
-          生成建议
+          {generating ? "生成中…" : "生成建议"}
         </button>
       </div>
       <label className={label}>
