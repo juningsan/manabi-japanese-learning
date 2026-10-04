@@ -1,9 +1,9 @@
 const nav = [
   { label: "ホーム", icon: "⌂", href: "#" },
   { label: "文法", icon: "文", href: "/grammar" },
-  { label: "単語", icon: "単", href: "#単語" },
-  { label: "ノート", icon: "ノ", href: "#ノート" },
-  { label: "復習", icon: "↻", href: "#復習" },
+  { label: "単語", icon: "単", href: "/vocabulary" },
+  { label: "ノート", icon: "ノ", href: "/notes" },
+  { label: "復習", icon: "↻", href: "/reviews" },
 ];
 
 const reviews = [

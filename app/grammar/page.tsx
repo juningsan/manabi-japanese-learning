@@ -25,7 +25,7 @@ export default async function GrammarPage({ searchParams }: Props) {
             Manabi
           </strong>
         </Link>
-        <div className="flex gap-3.5 text-xs font-bold text-muted sm:gap-7">
+        <div className="flex self-end gap-3.5 text-xs font-bold text-muted sm:gap-7">
           <Link className="hidden text-inherit no-underline sm:block" href="/">
             ホーム
           </Link>
@@ -35,8 +35,12 @@ export default async function GrammarPage({ searchParams }: Props) {
           >
             文法
           </Link>
-          <span className="hidden sm:block">単語</span>
-          <span className="hidden sm:block">ノート</span>
+          <Link className="hidden sm:block" href="/vocabulary">
+            単語
+          </Link>
+          <Link className="hidden sm:block" href="/notes">
+            ノート
+          </Link>
         </div>
       </nav>
       <section className="grid items-start gap-7 pt-10 pb-[38px] sm:flex sm:items-end sm:justify-between sm:pt-16">
